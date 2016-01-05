@@ -17,7 +17,7 @@ AppleStockObject = stock.Stock(ticker='aapl', startDate='2015-01-01', endDate=to
 
 ## Object Arguments
 
-- Stock(ticker, startDate, endDate, window, cache, refresh)
+Stock(ticker, startDate, endDate, window, cache, refresh)
 - ticker - string, the symbol for the stock
 - startDate - string, the starting date in the form 'YYYY-MM-DD'
 - endDate - string, same as startDate
