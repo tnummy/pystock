@@ -1,14 +1,13 @@
-
 import pandas as pd
 
 
 def SMA(data, window=26):
-    sma = pd.rolling_mean(data, window)
-    return sma
+    sma = data.rolling(window)
+    return sma.mean()
 
 
 def EMA(data, window=26):
-    ema = pd.ewma(data, window)
+    ema = data.ewm(window).mean()
     return ema
 
 
@@ -31,11 +30,11 @@ def SignalLine(data, window=9, simple=False):
 def RSI(data, window=14):
     upData = data.shift(1, axis=0) - data
     upData[upData < 0] = 0
-    upData = pd.rolling_mean(upData, window)
+    upData = upData.rolling(window).mean()
 
     downData = data.shift(1, axis=0) - data
     downData[downData > 0] = 0
-    downData = abs(pd.rolling_mean(downData, window))
+    downData = abs(downData.rolling(window).mean())
     rs = upData / downData
     rsi = (100 - (100 / (1 + rs)))
     return rsi
@@ -47,8 +46,8 @@ def Momentum(data, window=10):
 
 
 def STDev(data, window=26):
-    stdev = pd.rolling_std(data, window)
-    return stdev
+    stdev = data.rolling(window)
+    return stdev.std()
 
 
 def BBands(data, sma, window=26):
