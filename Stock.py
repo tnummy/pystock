@@ -16,13 +16,14 @@ class Stock(object):
     :param daterange: range of dates
     :returns: pandas array of stock data from the date range
     """
-    def __init__(self, ticker, startDate, endDate, window=26, cache=False, refresh=False):
+    def __init__(self, ticker, startDate, endDate, window=26, cache=False, refresh=False, verbose=False):
         self.ticker = ticker
         self.startDate = startDate
         self.endDate = endDate
         self.indicatorWindow = window
         self.cache = cache
         self.refresh = refresh
+        self.verbose = verbose
         self.Data()
         self.SimpleIndicators()
 
@@ -38,9 +39,11 @@ class Stock(object):
                 if (lastModified != today):
                     self.LiveData()
                 else:
-                    print 'Using cached stock data for "%s" from %s to %s.' % (self.ticker, self.startDate, self.endDate)
+                    if self.verbose:
+                        print 'Using cached stock data for "%s" from %s to %s.' % (self.ticker, self.startDate, self.endDate)
         else:
-            print 'Using cached stock data for "%s" from %s to %s.' % (self.ticker, self.startDate, self.endDate)
+            if self.verbose:
+                print 'Using cached stock data for "%s" from %s to %s.' % (self.ticker, self.startDate, self.endDate)
 
         try:
             stockData = pd.read_csv(filename, index_col='Date',
@@ -59,8 +62,9 @@ class Stock(object):
 
 
     def LiveData(self):
-        print
-        print 'Retrieving "%s" stock data from YaHoo from %s to %s...' %(self.ticker, self.startDate, self.endDate)
+        if self.verbose:
+            print
+            print 'Retrieving "%s" stock data from YaHoo from %s to %s...' %(self.ticker, self.startDate, self.endDate)
         try:
             stockDataSetup     = Share(self.ticker)
             stockDataSetup     = stockDataSetup.get_historical(self.startDate, self.endDate)
@@ -70,13 +74,16 @@ class Stock(object):
             print
             print 'Program Stopped.'
             exit()
-        print 'Converting "%s" stock data to DataFrames.' % self.ticker
+        if self.verbose:
+            print 'Converting "%s" stock data to DataFrames.' % self.ticker
         stockDataSetup     = stockDataSetup[::-1]
         stockData          = pd.DataFrame(stockDataSetup)
         stockData['Date']  = pd.to_datetime(stockData['Date'])
         stockData          = stockData.set_index('Date')
         stockData          = stockData.apply(pd.to_numeric, errors='coerce')
-        print '    ...converting finished'
+
+        if self.verbose:
+            print '    ...converting finished'
         if not (os.path.exists('cache/')):
             os.mkdir('cache/')
         stockData.to_csv(("cache/%s_%s_%s.csv" % (self.ticker, self.startDate, self.endDate)))

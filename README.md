@@ -17,13 +17,14 @@ AppleStockObject = stock.Stock(ticker='aapl', startDate='2015-01-01', endDate=to
 
 ## Object Arguments
 
-Stock(ticker, startDate, endDate, window, cache, refresh)
+Stock(ticker, startDate, endDate, window, cache, refresh, verbose)
 - ticker - string, the symbol for the stock
 - startDate - string, the starting date in the form 'YYYY-MM-DD'
 - endDate - string, same as startDate
 - window - integer, the size of the rolling window for technical indicators, default = 26
 - cache - boolean, force the use of the cached file?
 - refresh - boolean, force pull new data?
+- verbose - boolean, default False - prints status messages if True
 
 ## Object Attribues 
 
