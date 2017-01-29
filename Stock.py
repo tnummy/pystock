@@ -83,9 +83,13 @@ class Stock(object):
 
 
     def SimpleIndicators(self):
+        self.typical_price = self.data[['Close', 'High', 'Low']].mean(axis=1)
         self.sma    = ti.SMA(self.adjClosePrice, self.indicatorWindow)
         self.ema    = ti.EMA(self.adjClosePrice, self.indicatorWindow)
-        self.rsi    = ti.RSI(self.adjClosePrice, self.indicatorWindow)
+        self.rsi_close = ti.RSI(self.adjClosePrice, self.indicatorWindow)
+        self.rsi_typical = ti.RSI(self.typical_price, self.indicatorWindow)
+        self.rsi_closem = ti.RSIM(self.adjClosePrice, self.indicatorWindow)
+        self.rsi_typicalm = ti.RSIM(self.typical_price, self.indicatorWindow)
         self.stDev  = ti.STDev(self.adjClosePrice, self.indicatorWindow)
         self.momentum = ti.Momentum(self.adjClosePrice, self.indicatorWindow)
         self.macd, self.macdsignalline, self.macdhistogram \
@@ -101,8 +105,22 @@ class Stock(object):
         self.lowerindicators = utl.concatDataframes([
                                                     [self.stDev],
                                                     [self.momentum],
-                                                    [self.rsi],
+                                                    [self.rsi_close],
+                                                    [self.rsi_typical],
+                                                    [self.rsi_closem],
+                                                    [self.rsi_typicalm],
                                                     [self.macd]
                                                     ])
+        self.sma.columns = ['SMA']
+        self.ema.columns = ['EMA']
+        self.rsi_close.columns = ['RSI Close']
+        self.rsi_typical.columns = ['RSI Typical']
+        self.rsi_closem.columns = ['RSI Close Modified']
+        self.rsi_typicalm.columns = ['RSI Typical Modified']
+        self.macd.columns = ['MACD']
+        self.macdsignalline.columns = ['MACD Signal']
+        self.macdhistogram.columns = ['MACD Histogram']
+        self.upperbband.columns = ['Upper Band']
+        self.lowerbband.columns = ['Lower Band']
         self.upperindicators.columns = ['SMA', 'EMA', 'Upper Band', 'Lower Band']
-        self.lowerindicators.columns = ['Volatility', 'Momentum', 'RSI', 'MACD']
+        self.lowerindicators.columns = ['Volatility', 'Momentum', 'RSI Close', 'RSI Typical', 'RSI Close Modified', 'RSI Typical Modified', 'MACD']
