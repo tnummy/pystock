@@ -33,6 +33,7 @@ Stock(ticker, startDate, endDate, window, cache, refresh)
 - object.indicatorWindow
 - object.data - pandas table of stock data
 - object.adjClosePrice
+- object.typical_price - Average of high, low, and close prices
 - object.closePrice
 - object.highPrice - daily high
 - object.lowPrice - daily low
@@ -40,13 +41,16 @@ Stock(ticker, startDate, endDate, window, cache, refresh)
 - object.volume
 - object.sma - simple moving average
 - object.ema - exponential moving average
-- object.rsi - relative strength
+- object.rsi_close - relative strength using close price
+- object.rsi_typical - relative strength using typical price
+- object.rsi_closem - relative strength using close price and exponental weighted average close
+- object.rsi_typicalm - relative strength using typical price and exponental weighted average typical
 - object.stDev - volatility
 - object.momentum
 - object.macd
 - object.macdsignalline
 - object.macdhistogram
-- object.upperband - Upper Bollinger Band
-- object.lowerband - Lower BOllinger Band
+- object.upperbband - Upper Bollinger Band
+- object.lowerbband - Lower BOllinger Band
 - object.upperindicators - pandas table of upper indicators
 - object.lowerindicators - pandas table of lower indicators
