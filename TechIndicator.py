@@ -11,9 +11,9 @@ def EMA(data, window=26):
     return ema
 
 
-def MACDHistogram(data, windowLong=26, signalLineWindow=5):
+def MACDHistogram(data, windowLong=26, signalLineWindow=9):
     windowShort           = int(windowLong / 2)
-    MACD                  = (EMA(data, windowLong) - EMA(data, windowShort))
+    MACD                  = (EMA(data, windowShort) - EMA(data, windowLong))
     signalLine            = EMA(MACD, signalLineWindow)
     MACDHistogram         = MACD - signalLine
     return MACD, signalLine, MACDHistogram
@@ -28,13 +28,28 @@ def SignalLine(data, window=9, simple=False):
 
 
 def RSI(data, window=14):
-    upData = data.shift(1, axis=0) - data
+    shifted = data.shift(1, axis=0)
+    upData = data - shifted
     upData[upData < 0] = 0
     upData = upData.rolling(window).mean()
 
-    downData = data.shift(1, axis=0) - data
+    downData = data - shifted
     downData[downData > 0] = 0
     downData = abs(downData.rolling(window).mean())
+    rs = upData / downData
+    rsi = (100 - (100 / (1 + rs)))
+    return rsi
+
+
+def RSIM(data, window=14):
+    shifted = data.shift(1, axis=0)
+    upData = data - shifted
+    upData[upData < 0] = 0
+    upData = upData.ewm(window).mean()
+
+    downData = data - shifted
+    downData[downData > 0] = 0
+    downData = abs(downData.ewm(window).mean())
     rs = upData / downData
     rsi = (100 - (100 / (1 + rs)))
     return rsi
